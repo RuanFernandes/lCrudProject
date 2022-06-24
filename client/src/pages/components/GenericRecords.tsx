@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import DeleteRecordButton from "./DeleteRecordButton";
+import EditRecordButton from "./EditRecordButton";
 
 type GenericRecordsOptions = {
     editable?: boolean;
@@ -21,23 +23,43 @@ export default function GenericRecords(props: GenericRecordsProps) {
     const dataNames = props.dataNames;
     const apiUrl = props.apiURL;
 
-    useEffect(() => {
+    const fetchAPI = () => {
         fetch(apiUrl)
             .then(res => res.json())
             .then(data => setData(data));
+    }
+
+    useEffect(() => {
+        fetchAPI();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [apiUrl]);
+
+    useEffect(() => {
+        console.log("data changed.");
+    }, [data]);
 
     const handleEditButton = () => {
 
     };
 
-    const handleDeleteButton = () => {
-
+    const handleDeleteButton = (id: number) => {
+        fetch(apiUrl, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                rowid: id
+            })
+        }).then(data => data.blob().then(blob => blob.text()).then(text => {
+            fetchAPI();
+            alert(text);
+        }));
     };
 
-    const handleAddableButton = () => {
+    // const handleAddButton = () => {
 
-    };
+    // };
 
     return (<>
 
@@ -49,8 +71,11 @@ export default function GenericRecords(props: GenericRecordsProps) {
                         (options.editable ? <th className="px-4 py-2">&nbsp;</th> : null)
                     }
                     {
+                        (options.detetable ? <th className="px-4 py-2">&nbsp;</th> : null)
+                    }
+                    {
                         dataNames.map((item, index) => {
-                            return <th className="border border-slate-600 px-5 dark:text-white dark:border-slate-500 dark:bg-slate-900" key={index} style={{ textTransform: 'capitalize' }}>{item}</th>;
+                            return <th className="border border-slate-600 px-5 dark:text-white dark:border-slate-500 dark:bg-slate-900" key={index} style={{ textTransform: 'capitalize' }}>{item.replace('_', ' ')}</th>;
                         })
                     }
                 </tr>
@@ -58,10 +83,13 @@ export default function GenericRecords(props: GenericRecordsProps) {
             <tbody>
                 {
                     data.map((item, index) => {
-                        return (<>
+                        return (
                             <tr key={index}>
                                 {
-                                    (options.editable ? <td className="border border-slate-600 px-5 bg-slate-400 text-black text-center dark:text-white dark:border-slate-500 dark:bg-slate-700">aa</td> : null)
+                                    (options.editable ? <td className="border border-slate-600 bg-slate-400 text-black text-center dark:text-white dark:border-slate-500 dark:bg-slate-700 w-0"><EditRecordButton handler={handleEditButton} /></td> : null)
+                                }
+                                {
+                                    (options.detetable ? <td className="border border-slate-600 bg-slate-400 text-black text-center dark:text-white dark:border-slate-500 dark:bg-slate-700 w-0"><DeleteRecordButton handler={handleDeleteButton} delID={item['id']} /></td> : null)
                                 }
                                 {
                                     dataNames.map((itm, indx) => {
@@ -71,7 +99,7 @@ export default function GenericRecords(props: GenericRecordsProps) {
                                     })
                                 }
                             </tr>
-                        </>)
+                        )
                     })
                 }
             </tbody>
