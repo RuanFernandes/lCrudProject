@@ -38,7 +38,7 @@ export default function GenericRecords(props: GenericRecordsProps) {
         console.log("data changed.");
     }, [data]);
 
-    const handleEditButton = () => {
+    const handleEditButton = (id: number) => {
 
     };
 
@@ -86,7 +86,7 @@ export default function GenericRecords(props: GenericRecordsProps) {
                         return (
                             <tr key={index}>
                                 {
-                                    (options.editable ? <td className="border border-slate-600 bg-slate-400 text-black text-center dark:text-white dark:border-slate-500 dark:bg-slate-700 w-0"><EditRecordButton handler={handleEditButton} /></td> : null)
+                                    (options.editable ? <td className="border border-slate-600 bg-slate-400 text-black text-center dark:text-white dark:border-slate-500 dark:bg-slate-700 w-0"><EditRecordButton handler={handleEditButton} rowID={item['id']} /></td> : null)
                                 }
                                 {
                                     (options.detetable ? <td className="border border-slate-600 bg-slate-400 text-black text-center dark:text-white dark:border-slate-500 dark:bg-slate-700 w-0"><DeleteRecordButton handler={handleDeleteButton} delID={item['id']} /></td> : null)
