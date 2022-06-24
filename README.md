@@ -1,2 +1,2 @@
 # lCrudProject
- CRUD TypeScript React Prototype + Express on Backend
+ CRUD TypeScript React Prototype using TailwindCSS + Express on Backend
