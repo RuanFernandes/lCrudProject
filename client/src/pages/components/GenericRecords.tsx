@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import DeleteRecordButton from "./DeleteRecordButton";
 import EditRecordButton from "./EditRecordButton";
+import GenericModal from "./GenericModal";
 
 type GenericRecordsOptions = {
     editable?: boolean;
@@ -12,6 +13,7 @@ type GenericRecordsProps = {
     dataNames: string[];
     apiURL: string;
     options?: GenericRecordsOptions;
+    children: React.ReactNode;
 }
 
 
@@ -31,7 +33,7 @@ export default function GenericRecords(props: GenericRecordsProps) {
 
     useEffect(() => {
         fetchAPI();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [apiUrl]);
 
     useEffect(() => {
@@ -39,7 +41,9 @@ export default function GenericRecords(props: GenericRecordsProps) {
     }, [data]);
 
     const handleEditButton = (id: number) => {
-
+        const modal = document.getElementById("modalContainer");
+        modal?.classList.remove("hidden");
+        modal?.classList.add('flex');
     };
 
     const handleDeleteButton = (id: number) => {
@@ -62,6 +66,10 @@ export default function GenericRecords(props: GenericRecordsProps) {
     // };
 
     return (<>
+
+        <GenericModal onSave={() => console.log('hi')} >
+            {props.children}
+        </GenericModal>
 
         {/* Table Rendering */}
         <table className="table-auto border-separate border-spacing-2 border border-slate-600 dark:border-slate-600 w-full">
